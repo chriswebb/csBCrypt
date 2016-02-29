@@ -1,7 +1,8 @@
-jBCrypt is subject to the following license:
+csBCrypt is subject to the following license:
 
 /*
  * Copyright (c) 2006 Damien Miller <djm@mindrot.org>
+ * Copyright (c) 2016 Chris Webb <christopher.h.webb@gmail.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
