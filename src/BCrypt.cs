@@ -362,21 +362,21 @@ namespace csBCrypt
         };
 
         // Table for Base64 decoding
-        static private readonly sbyte[] index_64 = 
+        static private readonly byte[] index_64 = 
         {
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, 0, 1, 54, 55,
-            56, 57, 58, 59, 60, 61, 62, 63, -1, -1,
-            -1, -1, -1, -1, -1, 2, 3, 4, 5, 6,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+            64, 64, 64, 64, 64, 64, 0, 1, 54, 55,
+            56, 57, 58, 59, 60, 61, 62, 63, 64, 64,
+            64, 64, 64, 64, 64, 2, 3, 4, 5, 6,
             7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
             17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
-            -1, -1, -1, -1, -1, -1, 28, 29, 30,
+            64, 64, 64, 64, 64, 64, 28, 29, 30,
             31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-            51, 52, 53, -1, -1, -1, -1, -1
+            51, 52, 53, 64, 64, 64, 64, 64
         };
 
         // Expanded Blowfish key
@@ -393,7 +393,7 @@ namespace csBCrypt
          * @return	base64-encoded string
          * @exception IllegalArgumentException if the length is invalid
          */
-        private static System.String encode_base64(sbyte[] d, int len)
+        private static System.String encode_base64(byte[] d, int len)
         {
             int off = 0;
             System.Text.StringBuilder rs = new System.Text.StringBuilder();
@@ -433,10 +433,10 @@ namespace csBCrypt
          * @param x	the base64-encoded value
          * @return	the decoded value of x
          */
-        private static sbyte char64(char x)
+        private static byte char64(char x)
         {
             if ((int)x < 0 || (int)x > index_64.Length)
-                return -1;
+                return 64;
             return index_64[(int)x];
         }
 
@@ -449,12 +449,12 @@ namespace csBCrypt
          * @return	an array containing the decoded bytes
          * @throws IllegalArgumentException if maxolen is invalid
          */
-        private static sbyte[] decode_base64(System.String s, int maxolen)
+        private static byte[] decode_base64(System.String s, int maxolen)
         {
             System.Text.StringBuilder rs = new System.Text.StringBuilder();
             int off = 0, slen = s.Length, olen = 0;
-            sbyte[] ret;
-            sbyte c1, c2, c3, c4, o;
+            byte[] ret;
+            byte c1, c2, c3, c4, o;
 
             if (maxolen <= 0)
                 throw new System.ArgumentOutOfRangeException("maxolen", "Invalid maxolen");
@@ -463,31 +463,31 @@ namespace csBCrypt
             {
                 c1 = char64(s[off++]);
                 c2 = char64(s[off++]);
-                if (c1 == -1 || c2 == -1)
+                if (c1 == 64 || c2 == 64)
                     break;
-                o = (sbyte)(c1 << 2);
-                o = (sbyte)((byte)o | (c2 & 0x30) >> 4);
+                o = (byte)(c1 << 2);
+                o = (byte)((byte)o | (c2 & 0x30) >> 4);
                 rs.Append((char)o);
                 if (++olen >= maxolen || off >= slen)
                     break;
                 c3 = char64(s[off++]);
-                if (c3 == -1)
+                if (c3 == 64)
                     break;
-                o = (sbyte)((c2 & 0x0f) << 4);
-                o = (sbyte)((byte)o | (c3 & 0x3c) >> 2);
+                o = (byte)((c2 & 0x0f) << 4);
+                o = (byte)((byte)o | (c3 & 0x3c) >> 2);
                 rs.Append((char)o);
                 if (++olen >= maxolen || off >= slen)
                     break;
                 c4 = char64(s[off++]);
-                o = (sbyte)((c3 & 0x03) << 6);
-                o = (sbyte)((byte)o | (byte)c4);
+                o = (byte)((c3 & 0x03) << 6);
+                o = (byte)((byte)o | (byte)c4);
                 rs.Append((char)o);
                 ++olen;
             }
 
-            ret = new sbyte[olen];
+            ret = new byte[olen];
             for (off = 0; off < olen; off++)
-                ret[off] = (sbyte)rs[off];
+                ret[off] = (byte)rs[off];
             return ret;
         }
 
@@ -502,7 +502,7 @@ namespace csBCrypt
             uint i, n, l = lr[off], r = lr[off + 1];
 
             l ^= P[0];
-            for (i = 0; i <= BLOWFISH_NUM_ROUNDS - 2;) {
+            for (i = 0; i <= (uint)BLOWFISH_NUM_ROUNDS - 2;) {
                 // Feistel substitution on left word
                 n = S[(l >> 24) & 0xff];
                 n += S[0x100 | ((l >> 16) & 0xff)];
@@ -528,15 +528,15 @@ namespace csBCrypt
          * current offset into data
          * @return	the next word of material from data
          */
-        private static uint streamtoword(sbyte[] data, uint[] offp)
+        private static uint streamtoword(byte[] data, uint[] offp)
         {
             uint i;
             uint word = 0;
             uint off = offp[0];
 
             for (i = 0; i < 4; i++) {
-                word = (uint)(((int)word << 8) | (data[off] & 0xff));
-                off = (uint)((off + 1) % data.Length);
+                word = (uint)(((long)word << 8) | (long)(data[off] & 0xff));
+                off = (uint)((off + 1) % (uint)data.Length);
             }
 
             offp[0] = off;
@@ -556,7 +556,7 @@ namespace csBCrypt
          * Key the Blowfish cipher
          * @param key	an array containing the key
          */
-        private void key(sbyte[] key)
+        private void key(byte[] key)
         {
             uint i;
             uint[] koffp = { 0 };
@@ -588,7 +588,7 @@ namespace csBCrypt
          * @param data	salt information
          * @param key	password information
          */
-        private void ekskey(sbyte[] data, sbyte[] key)
+        private void ekskey(byte[] data, byte[] key)
         {
             int i;
             uint[] koffp = { 0 }, doffp = { 0 };
@@ -627,17 +627,17 @@ namespace csBCrypt
          * @param cdata         the plaintext to encrypt
          * @return	an array containing the binary hashed password
          */
-        public sbyte[] crypt_raw(sbyte[] password, sbyte[] salt, uint log_rounds, uint[] cdata)
+        public byte[] crypt_raw(byte[] password, byte[] salt, uint log_rounds, uint[] cdata)
         {
-            int rounds;
+            uint rounds;
             uint i, j;
-            int clen = cdata.Length;
-            sbyte[] ret;
+            uint clen = (uint)cdata.LongLength;
+            byte[] ret;
 
             if (log_rounds < 4 || log_rounds > 30)
                 throw new System.ArgumentException("Bad number of rounds", "log_rounds");
 
-            rounds = 1 << (int)log_rounds;
+            rounds = (uint)(1 << (int)log_rounds);
             if (salt.Length != BCRYPT_SALT_LEN)
                 throw new System.ArgumentException("Bad salt length", "salt");
 
@@ -655,12 +655,12 @@ namespace csBCrypt
                     encipher(cdata, (int)j << 1);
             }
 
-            ret = new sbyte[clen * 4];
+            ret = new byte[clen * 4];
             for (i = 0, j = 0; i < clen; i++) {
-                ret[j++] = (sbyte)((cdata[i] >> 24) & 0xff);
-                ret[j++] = (sbyte)((cdata[i] >> 16) & 0xff);
-                ret[j++] = (sbyte)((cdata[i] >> 8) & 0xff);
-                ret[j++] = (sbyte)(cdata[i] & 0xff);
+                ret[j++] = (byte)((cdata[i] >> 24) & 0xff);
+                ret[j++] = (byte)((cdata[i] >> 16) & 0xff);
+                ret[j++] = (byte)((cdata[i] >> 8) & 0xff);
+                ret[j++] = (byte)(cdata[i] & 0xff);
             }
             return ret;
         }
@@ -676,7 +676,7 @@ namespace csBCrypt
         {
             BCrypt B;
             System.String real_salt;
-            sbyte[] passwordb, saltb, hashed;
+            byte[] passwordb, saltb, hashed;
             char minor = (char)0;
             uint rounds, off = 0;
             System.Text.StringBuilder rs = new System.Text.StringBuilder();
@@ -703,7 +703,7 @@ namespace csBCrypt
             real_salt = salt.Substring((int)off + 3, 22);
             try
             {
-                passwordb = System.Array.ConvertAll(System.Text.Encoding.UTF8.GetBytes(password + (minor >= 'a' ? "\000" : "")), b => unchecked((sbyte)b));
+                passwordb = System.Text.Encoding.UTF8.GetBytes(password + (minor >= 'a' ? "\000" : ""));
             }
             catch (System.Exception ex)
             {
@@ -747,8 +747,6 @@ namespace csBCrypt
 
             random.GetBytes(rnd);
 
-            sbyte[] rndSbytes = System.Array.ConvertAll(rnd, b => unchecked((sbyte)b));
-
             rs.Append("$2a$");
             if (log_rounds < 10)
                 rs.Append("0");
@@ -756,7 +754,7 @@ namespace csBCrypt
                 throw new System.ArgumentException("log_rounds exceeds maximum (30)", "log_rounds");
             rs.Append(log_rounds);
             rs.Append("$");
-            rs.Append(encode_base64(rndSbytes, rnd.Length));
+            rs.Append(encode_base64(rnd, rnd.Length));
             return rs.ToString();
         }
 
@@ -791,13 +789,13 @@ namespace csBCrypt
          * @return	true if the passwords match, false otherwise
          */
         public static bool checkpw(System.String plaintext, System.String hashed) {
-            sbyte[] hashed_bytes;
-            sbyte[] try_bytes;
+            byte[] hashed_bytes;
+            byte[] try_bytes;
             try
             {
                 System.String try_pw = hashpw(plaintext, hashed);
-                hashed_bytes = System.Array.ConvertAll(System.Text.Encoding.UTF8.GetBytes(hashed), b => unchecked((sbyte)b));
-                try_bytes = System.Array.ConvertAll(System.Text.Encoding.UTF8.GetBytes(try_pw), b => unchecked((sbyte)b));
+                hashed_bytes = System.Text.Encoding.UTF8.GetBytes(hashed);
+                try_bytes = System.Text.Encoding.UTF8.GetBytes(try_pw);
                 
             }
             catch (System.Exception)
@@ -806,9 +804,9 @@ namespace csBCrypt
             }
             if (hashed_bytes.Length != try_bytes.Length)
                 return false;
-            sbyte ret = 0;
+            byte ret = 0;
             for (int i = 0; i < try_bytes.Length; i++)
-                ret = (sbyte)((byte)ret | hashed_bytes[i] ^ try_bytes[i]);
+                ret = (byte)((byte)ret | hashed_bytes[i] ^ try_bytes[i]);
             return ret == 0;
         }
     }
