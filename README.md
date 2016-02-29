@@ -23,7 +23,7 @@ A simple example that demonstrates most of the features:
 // Hash a password for the first time
 String hashed = BCrypt.CreateHash(password, BCrypt.GenerateSalt());
 
-// gensalt's log_rounds parameter determines the complexity
+// GenerateSalt's log_rounds parameter determines the complexity
 // the work factor is 2**log_rounds, and the default is 10
 String hashed = BCrypt.CreateHash(password, BCrypt.GenerateSalt(12));
 
