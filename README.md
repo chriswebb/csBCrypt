@@ -1,4 +1,4 @@
-jBCrypt is an implementation the OpenBSD Blowfish password hashing
+csBCrypt is an implementation the OpenBSD Blowfish password hashing
 algorithm, as described in "A Future-Adaptable Password Scheme" by Niels
 Provos and David Mazieres: http://www.openbsd.org/papers/bcrypt-paper.ps
 
