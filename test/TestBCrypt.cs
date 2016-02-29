@@ -1,4 +1,5 @@
 // Copyright (c) 2006 Damien Miller <djm@mindrot.org>
+// Copyright (c) 2016 Chris Webb <christopher.h.webb@gmail.com>
 //
 // Permission to use, copy, modify, and distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -17,16 +18,11 @@ using csBCrypt;
 
 namespace csBCryptTest
 {
-
-    /**
-     * JUnit unit tests for BCrypt routines
-     * @author Damien Miller
-     * @version 0.2
-     */
-
+    
+    ///<summary>NUnit unit tests for BCrypt routines</summary>
     [TestFixture]
     [TestOf(typeof(csBCrypt.BCrypt))]
-    [Author("Chris Webb", "chriswebb@users.noreply.github.com")]
+    [Author("Chris Webb", "christopher.h.webb@gmail.com")]
     public class TestBCrypt
     {
         System.String[][] test_vectors =
@@ -92,133 +88,92 @@ namespace csBCryptTest
             "$2a$12$WApznUOJfkEGSmYRfnkrPO",
             "$2a$12$WApznUOJfkEGSmYRfnkrPOr466oFDCaj4b6HY3EXGvfxm43seyhgC" },
         };
-
-        /**
-         * Entry point for unit tests
-         * @param args unused
-         */
-        //public static void main(System.String[] args)
-        //{
-
-        //}
-
-        /**
-         * Test method for 'BCrypt.hashpw(String, String)'
-         */
+        
+        ///<summary>Test method for 'BCrypt.CreateHash(String, String)'</summary>
         [Test]
         public void testHashpw()
         {
-            //System.out.print("BCrypt.hashpw(): ");
             for (int i = 0; i < test_vectors.Length; i++)
 
             {
                 System.String plain = test_vectors[i][0];
                 System.String salt = test_vectors[i][1];
                 System.String expected = test_vectors[i][2];
-                System.String hashed = BCrypt.hashpw(plain, salt);
+                System.String hashed = BCrypt.CreateHash(plain, salt);
                 Assert.AreEqual(expected, hashed);
-                //System.out.print(".");
             }
-            //System.out.println("");
         }
-
-        /**
-         * Test method for 'BCrypt.gensalt(int)'
-         */
+        
+        ///<summary>Test method for 'BCrypt.GenerateSalt(int)'</summary>
         [Test]
         public void testGensaltInt()
         {
-            //System.out.print("BCrypt.gensalt(log_rounds):");
             for (int i = 4; i <= 12; i++)
             {
-                //System.out.print(" " + i + ":");
                 for (int j = 0; j < test_vectors.Length; j += 4)
                 {
                     System.String plain = test_vectors[j][0];
-                    System.String salt = BCrypt.gensalt(i);
-                    System.String hashed1 = BCrypt.hashpw(plain, salt);
-                    System.String hashed2 = BCrypt.hashpw(plain, hashed1);
+                    System.String salt = BCrypt.GenerateSalt(i);
+                    System.String hashed1 = BCrypt.CreateHash(plain, salt);
+                    System.String hashed2 = BCrypt.CreateHash(plain, hashed1);
                     Assert.AreEqual(hashed1, hashed2);
-                    //System.out.print(".");
                 }
             }
-            //System.out.println("");
         }
-
-        /**
-         * Test method for 'BCrypt.gensalt()'
-         */
+        
+        ///<summary>Test method for 'BCrypt.GenerateSalt()'</summary>
         [Test]
         public void testGensalt()
         {
-            //System.out.print("BCrypt.gensalt(): ");
             for (int i = 0; i < test_vectors.Length; i += 4)
             {
                 System.String plain = test_vectors[i][0];
-                System.String salt = BCrypt.gensalt();
-                System.String hashed1 = BCrypt.hashpw(plain, salt);
-                System.String hashed2 = BCrypt.hashpw(plain, hashed1);
+                System.String salt = BCrypt.GenerateSalt();
+                System.String hashed1 = BCrypt.CreateHash(plain, salt);
+                System.String hashed2 = BCrypt.CreateHash(plain, hashed1);
                 Assert.AreEqual(hashed1, hashed2);
-                //System.out.print(".");
             }
-           //System.out.println("");
         }
 
-        /**
-         * Test method for 'BCrypt.checkpw(String, String)'
-         * expecting success
-         */
+        ///<summary>Test method for 'BCrypt.VerifyPlaintext(String, String)'</summary>
+        ///<remarks>Expecting success</remarks>
         [Test]
         public void testCheckpw_success()
         {
-           // System.out.print("BCrypt.checkpw w/ good passwords: ");
             for (int i = 0; i < test_vectors.Length; i++)
             {
                 System.String plain = test_vectors[i][0];
                 System.String expected = test_vectors[i][2];
-                Assert.That(BCrypt.checkpw(plain, expected));
-            //    System.out.print(".");
+                Assert.That(BCrypt.VerifyPlaintext(plain, expected));
             }
-           // System.out.println("");
         }
-
-        /**
-         * Test method for 'BCrypt.checkpw(String, String)'
-         * expecting failure
-         */
+        
+        ///<summary>Test method for 'BCrypt.VerifyPlaintext(String, String)'</summary>
+        ///<remarks>Expecting failure</remarks>
         [Test]
         public void testCheckpw_failure()
         {
-         //   System.out.print("BCrypt.checkpw w/ bad passwords: ");
             for (int i = 0; i < test_vectors.Length; i++)
             {
                 int broken_index = (i + 4) % test_vectors.Length;
                 System.String plain = test_vectors[i][0];
                 System.String expected = test_vectors[broken_index][2];
-                Assert.That(!BCrypt.checkpw(plain, expected));
-          //      System.out.print(".");
+                Assert.That(!BCrypt.VerifyPlaintext(plain, expected));
             }
-         //   System.out.println("");
         }
-
-        /**
-         * Test for correct hashing of non-US-ASCII passwords
-         */
+        
+        ///<summary>Test for correct hashing of non-US-ASCII passwords</summary>
         [Test]
         public void testInternationalChars()
         {
-           // System.out.print("BCrypt.hashpw w/ international chars: ");
             System.String pw1 = "\u2605\u2605\u2605\u2605\u2605\u2605\u2605\u2605";
             System.String pw2 = "????????";
 
-            System.String h1 = BCrypt.hashpw(pw1, BCrypt.gensalt());
-            Assert.That(!BCrypt.checkpw(pw2, h1));
-          //  System.out.print(".");
+            System.String h1 = BCrypt.CreateHash(pw1, BCrypt.GenerateSalt());
+            Assert.That(!BCrypt.VerifyPlaintext(pw2, h1));
 
-            System.String h2 = BCrypt.hashpw(pw2, BCrypt.gensalt());
-            Assert.That(!BCrypt.checkpw(pw1, h2));
-         //   System.out.print(".");
-        //    System.out.println("");
+            System.String h2 = BCrypt.CreateHash(pw2, BCrypt.GenerateSalt());
+            Assert.That(!BCrypt.VerifyPlaintext(pw1, h2));
         }
     }
 
