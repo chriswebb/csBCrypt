@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("csBCryptTest")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A test of an implementation the OpenBSD Blowfish password hashing algorithm")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Chris Webb")]
 [assembly: AssemblyProduct("csBCryptTest")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
