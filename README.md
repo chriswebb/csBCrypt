@@ -13,7 +13,7 @@ parameterised, so it can be increased as computers get faster.
 
 ## Testing
 
-NUnit regression tests are available in in TestBCrypt.cs
+NUnit regression tests are available in TestBCrypt.cs
 
 ## References
 
