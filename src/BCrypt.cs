@@ -390,7 +390,7 @@ namespace csBCrypt
             System.Text.StringBuilder rs = new System.Text.StringBuilder();
 
             if (length <= 0 || length > data.Length)
-                throw new System.ArgumentOutOfRangeException("len", "Invalid length passed to encode_base64");
+                throw new System.ArgumentOutOfRangeException("length", "Invalid length passed to Base64Encode");
 
             while (off < length)
             {
@@ -441,7 +441,7 @@ namespace csBCrypt
             byte c1, c2, c3, c4, o;
 
             if (maxLength <= 0)
-                throw new System.ArgumentOutOfRangeException("maxolen", "Invalid maxolen");
+                throw new System.ArgumentOutOfRangeException("maxLength", "Invalid max length passed to Base64Decode");
 
             while (off < slen - 1 && olen < maxLength)
             {
