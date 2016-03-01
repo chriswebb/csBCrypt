@@ -59,6 +59,8 @@ ISC/BSD License. See LICENSE file.
 ## Port Information
 
 
-This repository is based off of version 0.4 of jBCrypt found here: http://www.mindrot.org/projects/jBCrypt/
+This repository is based off of version 0.4 of jBCrypt found here: http://www.mindrot.org/projects/jBCrypt/ 
+
+I have also mirrored all version of jBCrypt on a personal repository here: https://github.com/chriswebb/jBCrypt/
 
 BCrypt.Net is based off of the same repository, but was not used in the making of this port. So this is **not** a fork of BCrypt.Net. This is a standalone port of jBCrypt.
