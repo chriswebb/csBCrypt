@@ -51,6 +51,11 @@ To add a new feature:
 
 ISC/BSD License. See LICENSE file.
 
+## Contributors
+
+* Chris Webb - Ported jBCrypt to .Net
+* Damien Miller <djm@mindrot.org> - Original jBCrypt
+
 ## Port Information
 
 
