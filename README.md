@@ -37,7 +37,8 @@ else
 
 ## Contributing
 
-Please report bugs to Chris Webb. 
+Please report bugs to this repository as a new issue. 
+
 To add a new feature:
 
 1. Fork this repository.
