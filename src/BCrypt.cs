@@ -587,9 +587,9 @@ namespace csBCrypt
         ///<param name="plaintext">The plaintext bytes to hash</param>
         ///<param name="salt">The salt bytes to hash with the plaintext</param>
         ///<param name="log_rounds">The binary logarithm of the number of rounds of hashing to apply</param>
-        ///<param name="cdata">The common IV to encrypt</param>
+        ///<param name="sharedSecret">The common IV to encrypt</param>
         ///<returns>An array containing the binary hashed plaintext</returns>
-        public byte[] CryptRaw(byte[] plaintext, byte[] salt, uint log_rounds, uint[] cdata)
+        public byte[] CryptRaw(byte[] plaintext, byte[] salt, uint log_rounds, uint[] sharedSecret)
         {
             if (log_rounds < 4 || log_rounds > 30)
                 throw new System.ArgumentException("Bad number of rounds", "log_rounds");
@@ -599,7 +599,7 @@ namespace csBCrypt
             
             int rounds = (1 << (int)log_rounds);
             int i, j;
-            int clen = cdata.Length;
+            int clen = sharedSecret.Length;
             byte[] ret;
 
             InitializeKey();
@@ -613,17 +613,17 @@ namespace csBCrypt
             for (i = 0; i < 64; i++)
             {
                 for (j = 0; j < (clen >> 1); j++)
-                    Encipher(cdata, j << 1);
+                    Encipher(sharedSecret, j << 1);
             }
 
             ret = new byte[clen * 4];
             for (i = 0; i < clen; i++)
             {
                 j = i << 2; 
-                ret[j] = (byte)((cdata[i] >> 24) & 0xff);
-                ret[j+1] = (byte)((cdata[i] >> 16) & 0xff);
-                ret[j+2] = (byte)((cdata[i] >> 8) & 0xff);
-                ret[j+3] = (byte)(cdata[i] & 0xff);
+                ret[j] = (byte)((sharedSecret[i] >> 24) & 0xff);
+                ret[j+1] = (byte)((sharedSecret[i] >> 16) & 0xff);
+                ret[j+2] = (byte)((sharedSecret[i] >> 8) & 0xff);
+                ret[j+3] = (byte)(sharedSecret[i] & 0xff);
             }
             return ret;
         }
