@@ -13,7 +13,7 @@ parameterised, so it can be increased as computers get faster.
 
 ## Testing
 
-NUnit regression tests are available in in TestBCrypt.cs
+NUnit regression tests are available in TestBCrypt.cs
 
 ## References
 
@@ -37,7 +37,8 @@ else
 
 ## Contributing
 
-Please report bugs to Chris Webb. 
+Please report bugs to this repository as a new issue. 
+
 To add a new feature:
 
 1. Fork this repository.
@@ -50,7 +51,16 @@ To add a new feature:
 
 ISC/BSD License. See LICENSE file.
 
+## Contributors
+
+* Chris Webb - Ported jBCrypt to .Net
+* Damien Miller <djm@mindrot.org> - Original jBCrypt
+
 ## Port Information
 
 
-This repository is based off of version 0.4 of jBCrypt found here: http://www.mindrot.org/projects/jBCrypt/
+This repository is based off of version 0.4 of jBCrypt found here: http://www.mindrot.org/projects/jBCrypt/ 
+
+I have also mirrored all versions of jBCrypt on a personal repository found here: https://github.com/chriswebb/jBCrypt/
+
+BCrypt.Net is based off of the same repository, but was not used in the making of this port. So this is **not** a fork of BCrypt.Net. This is a standalone port of jBCrypt.
