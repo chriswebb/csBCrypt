@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>csBCrypt</id>
+    <version>1.1.0</version>
+    <title>csBCrypt</title>
+    <authors>chriswebb</authors>
+    <owners>chriswebb</owners>
+	<license type="file">LICENSE.txt</license>
+    <projectUrl>https://github.com/chriswebb/csBCrypt</projectUrl>
+    <repository type="git" url="https://github.com/chriswebb/csBCrypt" />
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An implementation the OpenBSD Blowfish password hashing algorithm, as described in "A Future-Adaptable Password Scheme" by Niels Provos and David Mazieres.</description>
+    <releaseNotes>Added support for .Net Stanard 2.0 and Core 2.0</releaseNotes>
+    <copyright>Copyright © 2019</copyright>
+    <tags>bcrypt hash password crypt</tags>
+  </metadata>
+  <files>
+	<file src="LICENSE.txt" target="" />
+    <file src="src\bin\Release\net20\csBCrypt.dll" target="lib\net20\csBCrypt.dll" />
+    <file src="src\bin\Release\net20\csBCrypt.xml" target="lib\net20\csBCrypt.xml" />
+    <file src="src\bin\Release\net35\csBCrypt.dll" target="lib\net35\csBCrypt.dll" />
+    <file src="src\bin\Release\net35\csBCrypt.xml" target="lib\net35\csBCrypt.xml" />
+    <file src="src\bin\Release\net40\csBCrypt.dll" target="lib\net40\csBCrypt.dll" />
+    <file src="src\bin\Release\net40\csBCrypt.xml" target="lib\net40\csBCrypt.xml" />
+    <file src="src\bin\Release\net45\csBCrypt.dll" target="lib\net45\csBCrypt.dll" />
+    <file src="src\bin\Release\net45\csBCrypt.xml" target="lib\net45\csBCrypt.xml" />
+    <file src="src\bin\Release\net451\csBCrypt.dll" target="lib\net451\csBCrypt.dll" />
+    <file src="src\bin\Release\net451\csBCrypt.xml" target="lib\net451\csBCrypt.xml" />
+    <file src="src\bin\Release\net452\csBCrypt.dll" target="lib\net452\csBCrypt.dll" />
+    <file src="src\bin\Release\net452\csBCrypt.xml" target="lib\net452\csBCrypt.xml" />
+	<file src="src\bin\Release\net46\csBCrypt.dll" target="lib\net46\csBCrypt.dll" />
+	<file src="src\bin\Release\net46\csBCrypt.xml" target="lib\net46\csBCrypt.xml" />
+	<file src="src\bin\Release\net461\csBCrypt.dll" target="lib\net461\csBCrypt.dll" />
+	<file src="src\bin\Release\net461\csBCrypt.xml" target="lib\net461\csBCrypt.xml" />
+	<file src="src\bin\Release\net462\csBCrypt.dll" target="lib\net462\csBCrypt.dll" />
+	<file src="src\bin\Release\net462\csBCrypt.xml" target="lib\net462\csBCrypt.xml" />
+	<file src="src\bin\Release\net47\csBCrypt.dll" target="lib\net47\csBCrypt.dll" />
+	<file src="src\bin\Release\net47\csBCrypt.xml" target="lib\net47\csBCrypt.xml" />
+	<file src="src\bin\Release\net471\csBCrypt.dll" target="lib\net471\csBCrypt.dll" />
+	<file src="src\bin\Release\net471\csBCrypt.xml" target="lib\net471\csBCrypt.xml" />
+	<file src="src\bin\Release\net472\csBCrypt.dll" target="lib\net472\csBCrypt.dll" />
+	<file src="src\bin\Release\net472\csBCrypt.xml" target="lib\net472\csBCrypt.xml" />
+	<file src="src\bin\Release\netstandard2.0\csBCrypt.dll" target="lib\netstandard2.0\csBCrypt.dll" />
+	<file src="src\bin\Release\netstandard2.0\csBCrypt.xml" target="lib\netstandard2.0\csBCrypt.xml" />
+	<file src="src\bin\Release\netcoreapp2.0\csBCrypt.dll" target="lib\netcoreapp2.0\csBCrypt.dll" />
+	<file src="src\bin\Release\netcoreapp2.0\csBCrypt.xml" target="lib\netcoreapp2.0\csBCrypt.xml" />
+	<file src="src\bin\Release\netcoreapp2.1\csBCrypt.dll" target="lib\netcoreapp2.1\csBCrypt.dll" />
+	<file src="src\bin\Release\netcoreapp2.1\csBCrypt.xml" target="lib\netcoreapp2.1\csBCrypt.xml" />
+	<file src="src\bin\Release\netcoreapp2.2\csBCrypt.dll" target="lib\netcoreapp2.2\csBCrypt.dll" />
+	<file src="src\bin\Release\netcoreapp2.2\csBCrypt.xml" target="lib\netcoreapp2.2\csBCrypt.xml" />
+</files>
+</package>

@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>csBCrypt</name>
+    </assembly>
+    <members>
+        <member name="T:csBCrypt.BCrypt">
+            <summary>OpenBSD-style Blowfish password hashing</summary>
+            <remarks><para>BCrypt implements OpenBSD-style Blowfish password hashing using
+            the scheme described in "A Future-Adaptable Password Scheme" by
+            Niels Provos and David Mazieres.
+            </para>
+            <para>
+            This password hashing system tries to thwart off-line password
+            cracking using a computationally-intensive hashing algorithm,
+            based on Bruce Schneier's Blowfish cipher. The work factor of
+            the algorithm is parameterised, so it can be increased as
+            computers get faster.
+            </para>
+            <para>
+            Usage is really simple. To hash a password for the first time,
+            call the Createhash method with a random salt, like this:
+            </para>
+            <code>
+            String pw_hash = BCrypt.CreateHash(plain_password, BCrypt.GenerateSalt());
+            </code>
+            <para>
+            To check whether a plaintext password matches one that has been
+            hashed previously, use the VerifyPlaintext method:
+            </para>
+            <code>
+            if (BCrypt.VerifyPlaintext(candidate_password, stored_hash))
+                System.out.println("It matches");
+            else
+                System.out.println("It does not match");
+            </code>
+            <para>
+            The GenerateSalt() method takes an optional parameter(log_rounds)
+            that determines the computational complexity of the hashing:
+            </para>
+            <code>
+            String strong_salt = BCrypt.GenerateSalt(10)<br />
+            String stronger_salt = BCrypt.GenerateSalt(12)<br />
+            </code>
+            <para>
+             The amount of work increases exponentially(2**log_rounds), so
+             each increment is twice as much work.The default log_rounds is
+             10, and the valid range is 4 to 30.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:csBCrypt.BCrypt.Base64Encode(System.Byte[],System.Int32)">
+            <summary>Encode a byte array using bcrypt's slightly-modified base64
+            encoding scheme.</summary>
+            <remarks>This is *not* compatible with the standard MIME-base64 encoding.</remarks>
+            <param name="data">The byte array to encode</param>
+            <param name="length">The number of bytes to encode</param>
+            <returns>A base64-encoded string</returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.Char64(System.Char)">
+            <summary>Look up the 3 bits base64-encoded by the specified character,
+            range-checking againt conversion table</summary>
+            <param name="x">The base64-encoded value</param>
+            <returns>The decoded value of <paramref name="x"/></returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.Base64Decode(System.String,System.UInt32)">
+            <summary>Decode a string encoded using bcrypt's base64 scheme to a byte array.</summary>
+            <remarks>This is *not* compatible with the standard MIME-base64 encoding.</remarks>
+            <param name="str">The string to decode</param>
+            <param name="maxLength">The maximum number of bytes to decode</param>
+            <returns>An array containing the decoded bytes</returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.Encipher(System.UInt32[],System.Int32)">
+            <summary>Blowfish encipher a single 64-bit block encoded as two 32-bit halves</summary>
+            <param name="lr">an array containing the two 32-bit half blocks</param>
+            <param name="off">the position in the array of the blocks</param>
+        </member>
+        <member name="M:csBCrypt.BCrypt.StreamToWord(System.Byte[],System.Int32@)">
+            <summary>Cycically extract a word of key material</summary>
+            <param name="data">The string to extract the word from</param>
+            <param name="off">A reference of current offset</param>
+            <returns>The next word of material from data</returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.InitializeKey">
+            <summary>Initialize the Blowfish key schedule</summary>
+        </member>
+        <member name="M:csBCrypt.BCrypt.Key(System.Byte[])">
+            <summary>Key the Blowfish cipher</summary>
+            <param name="key">A byte array containing the key</param>
+        </member>
+        <member name="M:csBCrypt.BCrypt.EksKey(System.Byte[],System.Byte[])">
+            <summary>Perform the "enhanced key schedule" step</summary>
+            <remarks>Described by Provos and Mazieres in "A Future-Adaptable Password Scheme"
+            http://www.openbsd.org/papers/bcrypt-paper.ps
+            </remarks>
+            <param name="data">A byte array containing salt information</param>
+            <param name="key">A byte array containing plaintext information</param>
+        </member>
+        <member name="M:csBCrypt.BCrypt.CryptRaw(System.Byte[],System.Byte[],System.UInt32,System.UInt32[])">
+            <summary>Perform the central plaintext hashing step in the bcrypt scheme</summary>
+            <param name="plaintext">The plaintext bytes to hash</param>
+            <param name="salt">The salt bytes to hash with the plaintext</param>
+            <param name="log_rounds">The binary logarithm of the number of rounds of hashing to apply</param>
+            <param name="sharedSecret">The common IV to encrypt</param>
+            <returns>An array containing the binary hashed plaintext</returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.CreateHash(System.String,System.String)">
+            <summary>Hash plaintext using the OpenBSD bcrypt scheme</summary>
+            <param name="plaintext">The plaintext to hash</param>
+            <param name="salt">The salt to hash with (perhaps generated using BCrypt.GenerateSalt)</param>
+            <returns>The hash of the plaintext</returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.CreateHash(System.Text.Encoding,System.String,System.String)">
+            <summary>Hash plaintext using the OpenBSD bcrypt scheme</summary>
+            <param name="enc">The encoding type used for the plaintext</param>
+            <param name="plaintext">The plaintext to hash</param>
+            <param name="salt">The salt to hash with (perhaps generated using BCrypt.GenerateSalt)</param>
+            <returns>The hash of the plaintext</returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.GenerateSalt(System.Int32,System.Security.Cryptography.RandomNumberGenerator)">
+            <summary>Generate a salt for use with the BCrypt.CreateHash() method</summary>
+            <remarks>The work factor increases as 2**log_rounds.</remarks>
+            <param name="log_rounds">The log2 of the number of rounds of hashing to apply</param>
+            <param name="random">An instance of System.Security.Cryptography.RandomNumberGenerator to use</param>
+            <returns>An encoded salt value</returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.GenerateSalt(System.Int32)">
+            <summary>Generate a salt for use with the BCrypt.CreateHash() method</summary>
+            <remarks>The work factor increases as 2**log_rounds.</remarks>
+            <param name="log_rounds">The log2 of the number of rounds of hashing to apply</param>
+            <returns>An encoded salt value</returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.GenerateSalt(System.Int32,System.String)">
+            <summary>Generate a salt for use with the BCrypt.CreateHash() method</summary>
+            <remarks>The work factor increases as 2**log_rounds.</remarks>
+            <param name="log_rounds">The log2 of the number of rounds of hashing to apply</param>
+            <param name="rngName">The name of the random number generator algorithm to use.</param>
+            <returns>An encoded salt value</returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.GenerateSalt">
+            <summary>Generate a salt for use with the BCrypt.CreateHash() method</summary>
+            <remarks>Selects a reasonable default for the number of hashing rounds to apply</remarks>
+            <returns>An encoded salt value</returns>
+        </member>
+        <member name="M:csBCrypt.BCrypt.VerifyPlaintext(System.String,System.String)">
+            <summary>Check that plaintext matches hash of some original plaintext</summary>
+            <param name="plaintext">The plaintext to verify</param>
+            <param name="hashed">The hash of the original plaintext</param>
+            <returns>True if the plaintexts match, false otherwise</returns>
+        </member>
+    </members>
+</doc>

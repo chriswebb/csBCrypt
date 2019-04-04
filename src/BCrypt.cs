@@ -68,7 +68,7 @@ namespace csBCrypt
         private static readonly uint BLOWFISH_NUM_ROUNDS = 16;
 
         // Initial contents of key schedule
-        private static readonly uint[] P_orig = 
+        private static readonly uint[] P_orig =
         {
             0x243f6a88, 0x85a308d3, 0x13198a2e, 0x03707344,
             0xa4093822, 0x299f31d0, 0x082efa98, 0xec4e6c89,
@@ -76,7 +76,7 @@ namespace csBCrypt
             0xc0ac29b7, 0xc97c50dd, 0x3f84d5b5, 0xb5470917,
             0x9216d5d9, 0x8979fb1b
         };
-        private static readonly uint[] S_orig = 
+        private static readonly uint[] S_orig =
         {
             0xd1310ba6, 0x98dfb5ac, 0x2ffd72db, 0xd01adfb7,
             0xb8e1afed, 0x6a267e96, 0xba7c9045, 0xf12c7f99,
@@ -346,7 +346,7 @@ namespace csBCrypt
         };
 
         // Table for Base64 encoding
-        static private readonly char[] base64_code = 
+        static private readonly char[] base64_code =
         {
             '.', '/', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
             'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
@@ -357,7 +357,7 @@ namespace csBCrypt
         };
 
         // Table for Base64 decoding
-        static private readonly byte[] index_64 = 
+        static private readonly byte[] index_64 =
         {
             64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
             64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
@@ -377,7 +377,7 @@ namespace csBCrypt
         // Expanded Blowfish key
         private uint[] P;
         private uint[] S;
-        
+
         ///<summary>Encode a byte array using bcrypt's slightly-modified base64
         ///encoding scheme.</summary>
         ///<remarks>This is *not* compatible with the standard MIME-base64 encoding.</remarks>
@@ -416,7 +416,7 @@ namespace csBCrypt
             }
             return rs.ToString();
         }
-        
+
         ///<summary>Look up the 3 bits base64-encoded by the specified character,
         ///range-checking againt conversion table</summary>
         ///<param name="x">The base64-encoded value</param>
@@ -428,7 +428,7 @@ namespace csBCrypt
             return index_64[(int)x];
         }
 
-        
+
         ///<summary>Decode a string encoded using bcrypt's base64 scheme to a byte array.</summary>
         ///<remarks>This is *not* compatible with the standard MIME-base64 encoding.</remarks>
         ///<param name="str">The string to decode</param>
@@ -468,32 +468,32 @@ namespace csBCrypt
                 rs.Add(o);
                 ++olen;
             }
-            
+
             return rs.ToArray();
         }
-        
+
         ///<summary>Blowfish encipher a single 64-bit block encoded as two 32-bit halves</summary>
         ///<param name="lr">an array containing the two 32-bit half blocks</param>
         ///<param name="off">the position in the array of the blocks</param>
         private void Encipher(uint[] lr, int off)
         {
             uint i, n, l = lr[off] ^ P[0], r = lr[off + 1];
-            
-            for (i = 0; i <= BLOWFISH_NUM_ROUNDS - 2; i+=2)
+
+            for (i = 0; i <= BLOWFISH_NUM_ROUNDS - 2; i += 2)
             {
                 // Feistel substitution on left word
                 n = S[(l >> 24) & 0xff];
                 n += S[0x100 | ((l >> 16) & 0xff)];
                 n ^= S[0x200 | ((l >> 8) & 0xff)];
                 n += S[0x300 | (l & 0xff)];
-                r ^= n ^ P[i+1];
+                r ^= n ^ P[i + 1];
 
                 // Feistel substitution on right word
                 n = S[(r >> 24) & 0xff];
                 n += S[0x100 | ((r >> 16) & 0xff)];
                 n ^= S[0x200 | ((r >> 8) & 0xff)];
                 n += S[0x300 | (r & 0xff)];
-                l ^= n ^ P[i+2];
+                l ^= n ^ P[i + 2];
             }
             lr[off] = r ^ P[BLOWFISH_NUM_ROUNDS + 1];
             lr[off + 1] = l;
@@ -512,17 +512,17 @@ namespace csBCrypt
                 word = (uint)(((int)word << 8) | (data[off] & 0xff));
                 off = (off + 1) % data.Length;
             }
-            
+
             return word;
         }
-        
+
         ///<summary>Initialize the Blowfish key schedule</summary>
         private void InitializeKey()
         {
             P = (uint[])P_orig.Clone();
             S = (uint[])S_orig.Clone();
         }
-        
+
         ///<summary>Key the Blowfish cipher</summary>
         ///<param name="key">A byte array containing the key</param>
         private void Key(byte[] key)
@@ -547,7 +547,7 @@ namespace csBCrypt
                 S[i + 1] = lr[1];
             }
         }
-        
+
         ///<summary>Perform the "enhanced key schedule" step</summary>
         ///<remarks>Described by Provos and Mazieres in "A Future-Adaptable Password Scheme"
         ///http://www.openbsd.org/papers/bcrypt-paper.ps
@@ -596,7 +596,7 @@ namespace csBCrypt
 
             if (salt.Length != BCRYPT_SALT_LEN)
                 throw new System.ArgumentException("Bad salt length", "salt");
-            
+
             int rounds = (1 << (int)log_rounds);
             int i, j;
             int clen = sharedSecret.Length;
@@ -619,16 +619,16 @@ namespace csBCrypt
             ret = new byte[clen * 4];
             for (i = 0; i < clen; i++)
             {
-                j = i << 2; 
+                j = i << 2;
                 ret[j] = (byte)((sharedSecret[i] >> 24) & 0xff);
-                ret[j+1] = (byte)((sharedSecret[i] >> 16) & 0xff);
-                ret[j+2] = (byte)((sharedSecret[i] >> 8) & 0xff);
-                ret[j+3] = (byte)(sharedSecret[i] & 0xff);
+                ret[j + 1] = (byte)((sharedSecret[i] >> 16) & 0xff);
+                ret[j + 2] = (byte)((sharedSecret[i] >> 8) & 0xff);
+                ret[j + 3] = (byte)(sharedSecret[i] & 0xff);
             }
             return ret;
         }
 
-        
+
         ///<summary>Hash plaintext using the OpenBSD bcrypt scheme</summary>
         ///<param name="plaintext">The plaintext to hash</param>
         ///<param name="salt">The salt to hash with (perhaps generated using BCrypt.GenerateSalt)</param>
@@ -660,7 +660,7 @@ namespace csBCrypt
             else
             {
                 minor = salt[2];
-                if (minor != 'a' || salt[3] != '$')
+                if ((minor != 'a' && minor != 'y' && minor != 'b') || salt[3] != '$')
                     throw new System.ArgumentException("Invalid salt revision", "salt");
                 off = 4;
             }
@@ -727,10 +727,15 @@ namespace csBCrypt
         ///<returns>An encoded salt value</returns>
         public static string GenerateSalt(int log_rounds)
         {
+#if DISPOSABLE
             using (System.Security.Cryptography.RandomNumberGenerator random = System.Security.Cryptography.RandomNumberGenerator.Create())
             {
                 return GenerateSalt(log_rounds, random);
             }
+#else
+            System.Security.Cryptography.RandomNumberGenerator random = System.Security.Cryptography.RandomNumberGenerator.Create();
+            return GenerateSalt(log_rounds, random);
+#endif
         }
 
 
@@ -741,12 +746,17 @@ namespace csBCrypt
         ///<returns>An encoded salt value</returns>
         public static string GenerateSalt(int log_rounds, string rngName)
         {
+#if DISPOSABLE
             using (System.Security.Cryptography.RandomNumberGenerator random = System.Security.Cryptography.RandomNumberGenerator.Create(rngName))
             {
                 return GenerateSalt(log_rounds, random);
             }
+#else
+            System.Security.Cryptography.RandomNumberGenerator random = System.Security.Cryptography.RandomNumberGenerator.Create(rngName);
+            return GenerateSalt(log_rounds, random);
+#endif
         }
-        
+
         ///<summary>Generate a salt for use with the BCrypt.CreateHash() method</summary>
         ///<remarks>Selects a reasonable default for the number of hashing rounds to apply</remarks>
         ///<returns>An encoded salt value</returns>

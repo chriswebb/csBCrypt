@@ -49,7 +49,7 @@ To add a new feature:
 
 ## License
 
-ISC/BSD License. See LICENSE file.
+ISC/BSD License. See LICENSE.txt file.
 
 ## Contributors
 
